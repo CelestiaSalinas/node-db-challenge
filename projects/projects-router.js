@@ -14,22 +14,22 @@ router.get("/", (req, res) => {
     })
 })
 
-router.get("/:id", (req, res) => {
-    const { id } = req.params;
-    Projects.getById(id)
-    .then(project => {
-        if (project) {
-            res.status(200).json(project)
-        } else {
-            res.status(404).json({ errorMessage: "No project found" })
-        }
-    })
-    .catch(error => {
-        res.status(500).json({ errorMessage: "Encountered error while finding project" })
-    })
-})
+// router.get("/:id", (req, res) => {
+//     const { id } = req.params;
+//     Projects.getById(id)
+//     .then(project => {
+//         if (project) {
+//             res.status(200).json(project)
+//         } else {
+//             res.status(404).json({ errorMessage: "No project found" })
+//         }
+//     })
+//     .catch(error => {
+//         res.status(500).json({ errorMessage: "Encountered error while finding project" })
+//     })
+// })
 
-router.get('/tasks', (req, res) => {
+router.get('/:id/tasks', (req, res) => {
     const { id } = req.params;
 
     Projects.getTasks(id)
@@ -45,7 +45,7 @@ router.get('/tasks', (req, res) => {
     })
 })
 
-router.get("/resources", (req, res) => {
+router.get("/:id/resources", (req, res) => {
     const { id } = req.params;
   
     Projects.getResources(id)
@@ -53,7 +53,7 @@ router.get("/resources", (req, res) => {
         if (resources) {
           res.status(200).json(resources);
         } else {
-          res.status(404).json({ message: "Added resources" });
+          res.status(404).json({ message: "Could not find resources" });
         }
       })
       .catch(err => {
@@ -72,7 +72,7 @@ router.post('/', (req, res) => {
     })
 })
 
-router.post('/tasks', (req, res) => {
+router.post('/:id/tasks', (req, res) => {
     const data = req.body;
     Projects.addTask(data)
     .then(task => {
@@ -83,7 +83,7 @@ router.post('/tasks', (req, res) => {
     })
 })
 
-router.post('/resources', (req, res) => {
+router.post('/:id/resources', (req, res) => {
     const data = req.body;
     Projects.addResources(data)
     .then(resource => {
@@ -93,5 +93,20 @@ router.post('/resources', (req, res) => {
         res.status(500).json({errorMessage: "Encountered error while adding resource"})
     })
 })
+
+router.delete('/:id/resources/:id', (req, res) => {
+    const {id} = req.params;
+    Projects.remove(id)
+    .then(deleted => {
+      if (deleted) {
+        res.json({ removed: deleted });
+      } else {
+        res.status(404).json({ message: 'Could not find scheme with given id' });
+      }
+    })
+    .catch(err => {
+      res.status(500).json({ message: 'Failed to delete scheme' });
+    });
+  });
 
 module.exports = router;

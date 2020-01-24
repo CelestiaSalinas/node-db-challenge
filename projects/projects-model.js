@@ -7,7 +7,8 @@ module.exports = {
     getResources,
     addProject,
     addTask,
-    addResources
+    addResources,
+    remove
   };
 
 function getProjects() {
@@ -28,10 +29,11 @@ function getTasks(id) {
 }
 
 function getResources(id) {
-  return db("project_resources as pr")
-    .join("resources as r", "pr.resource_id", "r.id")
-    .select("pr.project_id", "r.id", "r.name", "r.description")
-    .where( "pr.project_id", id );
+//   return db("project_resources as pr")
+//     .join("resources as r", "pr.resource_id", "r.id")
+//     .select("pr.project_id", "r.id", "r.name", "r.description")
+//     .where( "pr.project_id", id );
+return db("resources")
 }
 
 function addProject(project) {
@@ -52,11 +54,19 @@ function addTask(task) {
     })
 }
 
-function addResources(resource) {
+function addResources(resource, project_id) {
     return db("resources")
     .insert(resource)
-    .then(ids => {
-        const [id] = ids;
-        return getResources(id);
-    })
+    .then(ids => ({ resource }));
+}
+    // .then(ids => {
+    //     const [id] = ids;
+    //     return db("project_resources").insert({resource_id: id, project_id});
+    // })
+// }
+
+function remove(id) {
+    return db("resources")
+    .where("id", id)
+    .del()
 }
