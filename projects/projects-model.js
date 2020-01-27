@@ -21,18 +21,24 @@ function getById(id) {
     .first();
 }
 
-function getTasks(id) {
-  return db("tasks as t")
-    .join("projects as p", "t.project_id", "p.id")
-    .select("t.id", "t.description", "t.completed")
-    .where({ project_id: id });
+function getTasks(project_id) {
+  return db('tasks')
+      .join('projects', 'projects.id', 'tasks.project_id')
+      .select(
+          'projects.name as projectName', 
+          'projects.description as projectDescription', 
+          'tasks.description as task',
+          'tasks.notes as taskNotes',
+          'tasks.completed as taskComplete'
+      )
+      .where({ project_id })
 }
 
 function getResources(id) {
-//   return db("project_resources as pr")
-//     .join("resources as r", "pr.resource_id", "r.id")
-//     .select("pr.project_id", "r.id", "r.name", "r.description")
-//     .where( "pr.project_id", id );
+  // return db("project_resources as pr")
+  //   .join("resources as r", "pr.resource_id", "r.id")
+  //   .select("pr.project_id", "r.id", "r.name", "r.description")
+  //   .where( "pr.project_id", id );
 return db("resources")
 }
 
@@ -58,12 +64,12 @@ function addResources(resource, project_id) {
     return db("resources")
     .insert(resource)
     .then(ids => ({ resource }));
-}
+
     // .then(ids => {
     //     const [id] = ids;
-    //     return db("project_resources").insert({resource_id: id, project_id});
+    //     return db("project_resources").insert(resource_id, project_id);
     // })
-// }
+}
 
 function remove(id) {
     return db("resources")

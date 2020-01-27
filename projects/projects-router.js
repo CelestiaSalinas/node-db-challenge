@@ -14,21 +14,6 @@ router.get("/", (req, res) => {
     })
 })
 
-// router.get("/:id", (req, res) => {
-//     const { id } = req.params;
-//     Projects.getById(id)
-//     .then(project => {
-//         if (project) {
-//             res.status(200).json(project)
-//         } else {
-//             res.status(404).json({ errorMessage: "No project found" })
-//         }
-//     })
-//     .catch(error => {
-//         res.status(500).json({ errorMessage: "Encountered error while finding project" })
-//     })
-// })
-
 router.get('/:id/tasks', (req, res) => {
     const { id } = req.params;
 
